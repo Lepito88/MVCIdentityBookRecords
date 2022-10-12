@@ -12,7 +12,10 @@ namespace MVCIdentityBookRecords.Data
             : base(options)
         {
         }
-
+        public virtual DbSet<Author> Authors { get; set; } = null!;
+        public virtual DbSet<Book> Books { get; set; } = null!;
+        public virtual DbSet<Category> Categories { get; set; } = null!;
+       
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -45,6 +48,9 @@ namespace MVCIdentityBookRecords.Data
             {
                 entity.ToTable("UserTokens");
             });
+
+
+
         }
     }
 }
