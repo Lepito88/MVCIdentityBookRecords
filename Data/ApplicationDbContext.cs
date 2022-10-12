@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MVCIdentityBookRecords.Models;
 
 namespace MVCIdentityBookRecords.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
-    {
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser> 
+    { 
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
