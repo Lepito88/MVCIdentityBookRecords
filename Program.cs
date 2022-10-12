@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Logging;
 using MVCIdentityBookRecords.Data;
 using MVCIdentityBookRecords.Models;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
@@ -32,12 +33,37 @@ builder.Services.AddRazorPages();
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddScoped<UserManager<ApplicationUser>>();
+builder.Services.AddScoped<RoleManager<IdentityRole>>();
+//builder.Services.AddScoped<ILogger>();
+
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
+    using (var scope = app.Services.CreateScope())
+    {
+        //var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
+
+        try
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            await ContextSeed.SeedRolesAsync(userManager, roleManager);
+            await ContextSeed.SeedSuperAdminAsync(userManager, roleManager);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            //logger.LogError(ex, "An error occurred seeding the DB.");
+        }
+
+    }
 }
 else
 {
