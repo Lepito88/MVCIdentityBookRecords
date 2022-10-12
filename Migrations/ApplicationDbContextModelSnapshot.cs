@@ -251,7 +251,7 @@ namespace MVCIdentityBookRecords.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<byte[]>("ProfilePicture")
-                        .IsRequired()
+                        
                         .HasColumnType("longblob");
 
                     b.Property<string>("SecurityStamp")

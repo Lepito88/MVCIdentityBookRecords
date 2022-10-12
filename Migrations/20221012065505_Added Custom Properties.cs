@@ -151,7 +151,7 @@ namespace MVCIdentityBookRecords.Migrations
                     LastName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UsernameChangeLimit = table.Column<int>(type: "int", nullable: false),
-                    ProfilePicture = table.Column<byte[]>(type: "longblob", nullable: false),
+                    ProfilePicture = table.Column<byte[]>(type: "longblob", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
