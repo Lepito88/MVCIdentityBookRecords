@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MVCIdentityBookRecords.Data;
-using MVCIdentityBookRecords.Interfaces;
+//using MVCIdentityBookRecords.Interfaces;
 using MVCIdentityBookRecords.Models;
-using MVCIdentityBookRecords.Services;
+//using MVCIdentityBookRecords.Services;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System.Configuration;
 using System.Text;
@@ -20,7 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("MySqlConnection").ToString();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString),
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)
     //options.UseSqlServer(connectionString));
     //o => o.SchemaBehavior(MySqlSchemaBehavior.Translate, (schema, table) => $"{ schema}_{ table}")
     )
@@ -67,12 +67,12 @@ builder.Services.AddScoped<RoleManager<IdentityRole>>();
 //builder.Services.AddTransient<ITokenService, TokenService>();
 //builder.Services.AddTransient<ILoginService, LoginService>();
 
-builder.Services.AddTransient<IBookService, BookService>();
-builder.Services.AddTransient<IAuthorService, AuthorService>();
-builder.Services.AddTransient<ICategoryService, CategoryService>();
+//builder.Services.AddTransient<IBookService, BookService>();
+//builder.Services.AddTransient<IAuthorService, AuthorService>();
+//builder.Services.AddTransient<ICategoryService, CategoryService>();
 //builder.Services.AddTransient<IUserService, UserService>();
 
-builder.Services.AddTransient<IEntityRelationShipManagerService, EntityRelationShipManagerService>();
+//builder.Services.AddTransient<IEntityRelationShipManagerService, EntityRelationShipManagerService>();
 
 var app = builder.Build();
 
