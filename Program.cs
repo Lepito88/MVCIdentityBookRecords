@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MVCIdentityBookRecords.Data;
+using MVCIdentityBookRecords.Interfaces;
 //using MVCIdentityBookRecords.Interfaces;
 using MVCIdentityBookRecords.Models;
+using MVCIdentityBookRecords.Services;
 //using MVCIdentityBookRecords.Services;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System.Configuration;
@@ -41,8 +43,18 @@ builder.Services.AddAuthentication()
     })
     .AddJwtBearer(options => 
     {
-        options.Audience = builder.Configuration["JWT:ValidAudience"];
-        options.Authority = builder.Configuration["JWT:ValidIssuer"];
+        //options.Audience = builder.Configuration["JWT:ValidAudience"];
+        //options.Authority = builder.Configuration["JWT:ValidIssuer"];
+        options.SaveToken = true;
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            //ValidateAudience = true,
+            ValidAudience = builder.Configuration["JWT:ValidAudience"],
+            ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+        };
     });
 //builder.Services.AddAuthentication().AddIdentityCookies();
 //builder.Services.AddAuthentication(options =>
@@ -51,19 +63,19 @@ builder.Services.AddAuthentication()
 //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 //    options.DefaultScheme = null;
 //});
-   
+
 ////Jwt bearer options
 //.AddJwtBearer(options => {
-//    options.SaveToken = true;
-//    options.RequireHttpsMetadata = false;
-//    options.TokenValidationParameters = new TokenValidationParameters()
-//    {
-//        ValidateIssuer = true,
-//        //ValidateAudience = true,
-//        ValidAudience = builder.Configuration["JWT:ValidAudience"],
-//        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
-//    };
+//options.SaveToken = true;
+//options.RequireHttpsMetadata = false;
+//options.TokenValidationParameters = new TokenValidationParameters()
+//{
+//    ValidateIssuer = true,
+//    //ValidateAudience = true,
+//    ValidAudience = builder.Configuration["JWT:ValidAudience"],
+//    ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+//    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+//};
 //});
 builder.Services.AddAuthorization();
 
@@ -71,7 +83,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 //builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-//builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddEndpointsApiExplorer();
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -83,7 +95,7 @@ builder.Services.AddScoped<RoleManager<IdentityRole>>();
 //builder.Services.AddTransient<ILoginService, LoginService>();
 
 //builder.Services.AddTransient<IBookService, BookService>();
-//builder.Services.AddTransient<IAuthorService, AuthorService>();
+builder.Services.AddTransient<IAuthorService, AuthorService>();
 //builder.Services.AddTransient<ICategoryService, CategoryService>();
 //builder.Services.AddTransient<IUserService, UserService>();
 
