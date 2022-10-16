@@ -17,7 +17,8 @@ namespace MVCIdentityBookRecords.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize(Roles ="Basic,Admin")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class BooksController : ControllerBase
     {
         private readonly IBookService _bookService;

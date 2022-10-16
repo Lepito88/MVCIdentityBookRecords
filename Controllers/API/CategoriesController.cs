@@ -8,7 +8,8 @@ namespace MVCIdentityBookRecords.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize(Roles = "Basic,Admin")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class CategoriesController : BaseApiController
     {
 
