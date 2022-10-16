@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCIdentityBookRecords.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221012143355_booktables")]
-    partial class booktables
+    [Migration("20221016161002_Initial with Identitytables renamed & customFields")]
+    partial class InitialwithIdentitytablesrenamedcustomFields
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,45 +24,45 @@ namespace MVCIdentityBookRecords.Migrations
 
             modelBuilder.Entity("ApplicationUserBook", b =>
                 {
-                    b.Property<int>("BooksIdbook")
+                    b.Property<int>("BooksBookId")
                         .HasColumnType("int");
 
-                    b.Property<string>("IdUsersId")
+                    b.Property<string>("UsersId")
                         .HasColumnType("varchar(255)");
 
-                    b.HasKey("BooksIdbook", "IdUsersId");
+                    b.HasKey("BooksBookId", "UsersId");
 
-                    b.HasIndex("IdUsersId");
+                    b.HasIndex("UsersId");
 
                     b.ToTable("ApplicationUserBook", "Identity");
                 });
 
             modelBuilder.Entity("AuthorBook", b =>
                 {
-                    b.Property<int>("AuthorsIdauthor")
+                    b.Property<int>("AuthorsAuthorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("BooksIdbook")
+                    b.Property<int>("BooksBookId")
                         .HasColumnType("int");
 
-                    b.HasKey("AuthorsIdauthor", "BooksIdbook");
+                    b.HasKey("AuthorsAuthorId", "BooksBookId");
 
-                    b.HasIndex("BooksIdbook");
+                    b.HasIndex("BooksBookId");
 
                     b.ToTable("AuthorBook", "Identity");
                 });
 
             modelBuilder.Entity("BookCategory", b =>
                 {
-                    b.Property<int>("BooksIdbook")
+                    b.Property<int>("BooksBookId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoriesIdcategory")
+                    b.Property<int>("CategoriesCategoryId")
                         .HasColumnType("int");
 
-                    b.HasKey("BooksIdbook", "CategoriesIdcategory");
+                    b.HasKey("BooksBookId", "CategoriesCategoryId");
 
-                    b.HasIndex("CategoriesIdcategory");
+                    b.HasIndex("CategoriesCategoryId");
 
                     b.ToTable("BookCategory", "Identity");
                 });
@@ -275,7 +275,7 @@ namespace MVCIdentityBookRecords.Migrations
 
             modelBuilder.Entity("MVCIdentityBookRecords.Models.Author", b =>
                 {
-                    b.Property<int>("Idauthor")
+                    b.Property<int>("AuthorId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -287,14 +287,14 @@ namespace MVCIdentityBookRecords.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("Idauthor");
+                    b.HasKey("AuthorId");
 
                     b.ToTable("Authors", "Identity");
                 });
 
             modelBuilder.Entity("MVCIdentityBookRecords.Models.Book", b =>
                 {
-                    b.Property<int>("Idbook")
+                    b.Property<int>("BookId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -311,14 +311,14 @@ namespace MVCIdentityBookRecords.Migrations
                     b.Property<string>("Type")
                         .HasColumnType("longtext");
 
-                    b.HasKey("Idbook");
+                    b.HasKey("BookId");
 
                     b.ToTable("Books", "Identity");
                 });
 
             modelBuilder.Entity("MVCIdentityBookRecords.Models.Category", b =>
                 {
-                    b.Property<int>("Idcategory")
+                    b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -326,7 +326,7 @@ namespace MVCIdentityBookRecords.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("Idcategory");
+                    b.HasKey("CategoryId");
 
                     b.ToTable("Categories", "Identity");
                 });
@@ -335,13 +335,13 @@ namespace MVCIdentityBookRecords.Migrations
                 {
                     b.HasOne("MVCIdentityBookRecords.Models.Book", null)
                         .WithMany()
-                        .HasForeignKey("BooksIdbook")
+                        .HasForeignKey("BooksBookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MVCIdentityBookRecords.Models.ApplicationUser", null)
                         .WithMany()
-                        .HasForeignKey("IdUsersId")
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -350,13 +350,13 @@ namespace MVCIdentityBookRecords.Migrations
                 {
                     b.HasOne("MVCIdentityBookRecords.Models.Author", null)
                         .WithMany()
-                        .HasForeignKey("AuthorsIdauthor")
+                        .HasForeignKey("AuthorsAuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MVCIdentityBookRecords.Models.Book", null)
                         .WithMany()
-                        .HasForeignKey("BooksIdbook")
+                        .HasForeignKey("BooksBookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -365,13 +365,13 @@ namespace MVCIdentityBookRecords.Migrations
                 {
                     b.HasOne("MVCIdentityBookRecords.Models.Book", null)
                         .WithMany()
-                        .HasForeignKey("BooksIdbook")
+                        .HasForeignKey("BooksBookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MVCIdentityBookRecords.Models.Category", null)
                         .WithMany()
-                        .HasForeignKey("CategoriesIdcategory")
+                        .HasForeignKey("CategoriesCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

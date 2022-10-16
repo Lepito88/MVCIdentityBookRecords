@@ -12,7 +12,7 @@ namespace MVCIdentityBookRecords.Models
             Books = new HashSet<Book>();
         }
         [Key]
-        public int Idauthor { get; set; }
+        public int AuthorId { get; set; }
         public string Firstname { get; set; } = null!;
         public string Lastname { get; set; } = null!;
 

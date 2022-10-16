@@ -15,7 +15,7 @@ namespace MVCIdentityBookRecords.Models
             Users = new HashSet<ApplicationUser>();
         }
         [Key]
-        public int Idbook { get; set; }
+        public int BookId { get; set; }
         public string BookName { get; set; } = null!;
 
         [DataType(DataType.Date)]

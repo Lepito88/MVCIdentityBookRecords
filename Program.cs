@@ -20,9 +20,9 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("MySqlConnection").ToString();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString),
     //options.UseSqlServer(connectionString));
-    //o => o.SchemaBehavior(MySqlSchemaBehavior.Translate, (schema, table) => $"{ schema}_{ table}")
+    o => o.SchemaBehavior(MySqlSchemaBehavior.Translate, (schema, entity) => $"{schema ?? "dbo"}_{entity}")
     )
     );
 
@@ -31,26 +31,41 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
         .AddDefaultUI()
         .AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-//Jwt bearer options
-.AddJwtBearer(options => {
-    options.SaveToken = true;
-    options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:ValidAudience"],
-        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
-    };
-});
 
+builder.Services.AddAuthentication()
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Unauthorized/";
+        options.AccessDeniedPath = "/Account/Forbidden/";
+       
+    })
+    .AddJwtBearer(options => 
+    {
+        options.Audience = builder.Configuration["JWT:ValidAudience"];
+        options.Authority = builder.Configuration["JWT:ValidIssuer"];
+    });
+//builder.Services.AddAuthentication().AddIdentityCookies();
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultScheme = null;
+//});
+   
+////Jwt bearer options
+//.AddJwtBearer(options => {
+//    options.SaveToken = true;
+//    options.RequireHttpsMetadata = false;
+//    options.TokenValidationParameters = new TokenValidationParameters()
+//    {
+//        ValidateIssuer = true,
+//        //ValidateAudience = true,
+//        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+//        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+//    };
+//});
+builder.Services.AddAuthorization();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 //builder.Services.AddControllers();
@@ -96,7 +111,7 @@ if (app.Environment.IsDevelopment())
     //catch (Exception ex)
     //{
     //    Console.WriteLine(ex);
-    //    //logger.LogError(ex, "An error occurred seeding the DB.");
+    //    logger.LogError(ex, "An error occurred seeding the DB.");
     //}
 }
 else
@@ -111,12 +126,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();
-app.UseAuthorization();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.Run();

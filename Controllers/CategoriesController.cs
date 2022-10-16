@@ -34,7 +34,7 @@ namespace MVCIdentityBookRecords.Controllers
             }
 
             var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Idcategory == id);
+                .FirstOrDefaultAsync(m => m.CategoryId == id);
             if (category == null)
             {
                 return NotFound();
@@ -54,7 +54,7 @@ namespace MVCIdentityBookRecords.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Idcategory,CategoryName")] Category category)
+        public async Task<IActionResult> Create([Bind("CategoryId,CategoryName")] Category category)
         {
             if (ModelState.IsValid)
             {
@@ -86,9 +86,9 @@ namespace MVCIdentityBookRecords.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Idcategory,CategoryName")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("CategoryId,CategoryName")] Category category)
         {
-            if (id != category.Idcategory)
+            if (id != category.CategoryId)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace MVCIdentityBookRecords.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryExists(category.Idcategory))
+                    if (!CategoryExists(category.CategoryId))
                     {
                         return NotFound();
                     }
@@ -125,7 +125,7 @@ namespace MVCIdentityBookRecords.Controllers
             }
 
             var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Idcategory == id);
+                .FirstOrDefaultAsync(m => m.CategoryId == id);
             if (category == null)
             {
                 return NotFound();
@@ -155,7 +155,7 @@ namespace MVCIdentityBookRecords.Controllers
 
         private bool CategoryExists(int id)
         {
-          return _context.Categories.Any(e => e.Idcategory == id);
+          return _context.Categories.Any(e => e.CategoryId == id);
         }
     }
 }

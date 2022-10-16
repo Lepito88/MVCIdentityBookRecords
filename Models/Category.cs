@@ -12,7 +12,7 @@ namespace MVCIdentityBookRecords.Models
             Books = new HashSet<Book>();
         }
         [Key]
-        public int Idcategory { get; set; }
+        public int CategoryId { get; set; }
         public string CategoryName { get; set; } = null!;
         [JsonIgnore]
         public virtual ICollection<Book> Books { get; set; }

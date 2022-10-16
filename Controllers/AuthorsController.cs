@@ -34,7 +34,7 @@ namespace MVCIdentityBookRecords.Controllers
             }
 
             var author = await _context.Authors
-                .FirstOrDefaultAsync(m => m.Idauthor == id);
+                .FirstOrDefaultAsync(m => m.AuthorId == id);
             if (author == null)
             {
                 return NotFound();
@@ -54,7 +54,7 @@ namespace MVCIdentityBookRecords.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Idauthor,Firstname,Lastname")] Author author)
+        public async Task<IActionResult> Create([Bind("AuthorId,Firstname,Lastname")] Author author)
         {
             if (ModelState.IsValid)
             {
@@ -86,9 +86,9 @@ namespace MVCIdentityBookRecords.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Idauthor,Firstname,Lastname")] Author author)
+        public async Task<IActionResult> Edit(int id, [Bind("AuthorId,Firstname,Lastname")] Author author)
         {
-            if (id != author.Idauthor)
+            if (id != author.AuthorId)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace MVCIdentityBookRecords.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuthorExists(author.Idauthor))
+                    if (!AuthorExists(author.AuthorId))
                     {
                         return NotFound();
                     }
@@ -125,7 +125,7 @@ namespace MVCIdentityBookRecords.Controllers
             }
 
             var author = await _context.Authors
-                .FirstOrDefaultAsync(m => m.Idauthor == id);
+                .FirstOrDefaultAsync(m => m.AuthorId == id);
             if (author == null)
             {
                 return NotFound();
@@ -155,7 +155,7 @@ namespace MVCIdentityBookRecords.Controllers
 
         private bool AuthorExists(int id)
         {
-          return _context.Authors.Any(e => e.Idauthor == id);
+          return _context.Authors.Any(e => e.AuthorId == id);
         }
     }
 }

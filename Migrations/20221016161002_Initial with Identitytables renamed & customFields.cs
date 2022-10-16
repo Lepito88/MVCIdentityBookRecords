@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MVCIdentityBookRecords.Migrations
 {
-    public partial class Identitytablenamesrenamedandaddedcustomfields : Migration
+    public partial class InitialwithIdentitytablesrenamedcustomFields : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,6 +14,61 @@ namespace MVCIdentityBookRecords.Migrations
                 name: "Identity");
 
             migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Authors",
+                schema: "Identity",
+                columns: table => new
+                {
+                    AuthorId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Firstname = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Lastname = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Authors", x => x.AuthorId);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Books",
+                schema: "Identity",
+                columns: table => new
+                {
+                    BookId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    BookName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ReleaseDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Type = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Isbn = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Books", x => x.BookId);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                schema: "Identity",
+                columns: table => new
+                {
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CategoryName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.CategoryId);
+                })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -79,6 +134,62 @@ namespace MVCIdentityBookRecords.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "AuthorBook",
+                schema: "Identity",
+                columns: table => new
+                {
+                    AuthorsAuthorId = table.Column<int>(type: "int", nullable: false),
+                    BooksBookId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuthorBook", x => new { x.AuthorsAuthorId, x.BooksBookId });
+                    table.ForeignKey(
+                        name: "FK_AuthorBook_Authors_AuthorsAuthorId",
+                        column: x => x.AuthorsAuthorId,
+                        principalSchema: "Identity",
+                        principalTable: "Authors",
+                        principalColumn: "AuthorId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AuthorBook_Books_BooksBookId",
+                        column: x => x.BooksBookId,
+                        principalSchema: "Identity",
+                        principalTable: "Books",
+                        principalColumn: "BookId",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "BookCategory",
+                schema: "Identity",
+                columns: table => new
+                {
+                    BooksBookId = table.Column<int>(type: "int", nullable: false),
+                    CategoriesCategoryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookCategory", x => new { x.BooksBookId, x.CategoriesCategoryId });
+                    table.ForeignKey(
+                        name: "FK_BookCategory_Books_BooksBookId",
+                        column: x => x.BooksBookId,
+                        principalSchema: "Identity",
+                        principalTable: "Books",
+                        principalColumn: "BookId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookCategory_Categories_CategoriesCategoryId",
+                        column: x => x.CategoriesCategoryId,
+                        principalSchema: "Identity",
+                        principalTable: "Categories",
+                        principalColumn: "CategoryId",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "RoleClaims",
                 schema: "Identity",
                 columns: table => new
@@ -100,6 +211,35 @@ namespace MVCIdentityBookRecords.Migrations
                         column: x => x.RoleId,
                         principalSchema: "Identity",
                         principalTable: "Role",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "ApplicationUserBook",
+                schema: "Identity",
+                columns: table => new
+                {
+                    BooksBookId = table.Column<int>(type: "int", nullable: false),
+                    UsersId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationUserBook", x => new { x.BooksBookId, x.UsersId });
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserBook_Books_BooksBookId",
+                        column: x => x.BooksBookId,
+                        principalSchema: "Identity",
+                        principalTable: "Books",
+                        principalColumn: "BookId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserBook_User_UsersId",
+                        column: x => x.UsersId,
+                        principalSchema: "Identity",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -217,6 +357,24 @@ namespace MVCIdentityBookRecords.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUserBook_UsersId",
+                schema: "Identity",
+                table: "ApplicationUserBook",
+                column: "UsersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AuthorBook_BooksBookId",
+                schema: "Identity",
+                table: "AuthorBook",
+                column: "BooksBookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookCategory_CategoriesCategoryId",
+                schema: "Identity",
+                table: "BookCategory",
+                column: "CategoriesCategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 schema: "Identity",
                 table: "Role",
@@ -264,6 +422,18 @@ namespace MVCIdentityBookRecords.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ApplicationUserBook",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
+                name: "AuthorBook",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
+                name: "BookCategory",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
                 name: "RoleClaims",
                 schema: "Identity");
 
@@ -281,6 +451,18 @@ namespace MVCIdentityBookRecords.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserTokens",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
+                name: "Authors",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
+                name: "Books",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
+                name: "Categories",
                 schema: "Identity");
 
             migrationBuilder.DropTable(
