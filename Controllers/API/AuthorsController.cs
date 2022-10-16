@@ -15,7 +15,7 @@ namespace MVCIdentityBookRecords.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class AuthorsController : BaseApiController
     {
         

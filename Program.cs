@@ -22,7 +22,8 @@ var connectionString = builder.Configuration.GetConnectionString("MySqlConnectio
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString),
     //options.UseSqlServer(connectionString));
-    o => o.SchemaBehavior(MySqlSchemaBehavior.Translate, (schema, table) => $"{ schema}_{ table}"))
+    //o => o.SchemaBehavior(MySqlSchemaBehavior.Translate, (schema, table) => $"{ schema}_{ table}")
+    )
     );
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -52,10 +53,10 @@ builder.Services.AddAuthentication(options =>
 
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddEndpointsApiExplorer();
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<ApplicationDbContext>();
