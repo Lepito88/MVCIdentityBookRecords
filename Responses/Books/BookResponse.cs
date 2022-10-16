@@ -4,7 +4,7 @@ namespace MVCIdentityBookRecords.Responses.Books
 {
     public class BookResponse : BaseResponse
     {
-        public int Idbook { get; set; }
+        public int BookId { get; set; }
         public string BookName { get; set; }
         public string Type { get; set; }
         public string Isbn { get; set; }
