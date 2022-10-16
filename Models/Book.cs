@@ -12,7 +12,7 @@ namespace MVCIdentityBookRecords.Models
         {
             Authors = new HashSet<Author>();
             Categories = new HashSet<Category>();
-            IdUsers = new HashSet<ApplicationUser>();
+            Users = new HashSet<ApplicationUser>();
         }
         [Key]
         public int Idbook { get; set; }
@@ -26,6 +26,6 @@ namespace MVCIdentityBookRecords.Models
         public virtual ICollection<Author> Authors { get; set; }
         public virtual ICollection<Category> Categories { get; set; }
         [JsonIgnore]
-        public virtual ICollection<ApplicationUser> IdUsers { get; set; }
+        public virtual ICollection<ApplicationUser> Users { get; set; }
     }
 }

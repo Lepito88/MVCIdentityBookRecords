@@ -1,11 +1,17 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using MVCIdentityBookRecords.Data;
+using MVCIdentityBookRecords.Interfaces;
 using MVCIdentityBookRecords.Models;
+using MVCIdentityBookRecords.Services;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System.Configuration;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,11 +30,32 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
         .AddDefaultUI()
         .AddDefaultTokenProviders();
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+//Jwt bearer options
+.AddJwtBearer(options => {
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+    };
+});
+
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
-
+builder.Services.AddEndpointsApiExplorer();
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -36,6 +63,15 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<UserManager<ApplicationUser>>();
 builder.Services.AddScoped<RoleManager<IdentityRole>>();
 //builder.Services.AddScoped<ILogger>();
+//builder.Services.AddTransient<ITokenService, TokenService>();
+//builder.Services.AddTransient<ILoginService, LoginService>();
+
+builder.Services.AddTransient<IBookService, BookService>();
+builder.Services.AddTransient<IAuthorService, AuthorService>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
+//builder.Services.AddTransient<IUserService, UserService>();
+
+builder.Services.AddTransient<IEntityRelationShipManagerService, EntityRelationShipManagerService>();
 
 var app = builder.Build();
 
@@ -45,25 +81,22 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
-    using (var scope = app.Services.CreateScope())
-    {
-        //var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
+    using var scope = app.Services.CreateScope();
+    //var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
 
-        try
-        {
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            await ContextSeed.SeedRolesAsync(userManager, roleManager);
-            await ContextSeed.SeedSuperAdminAsync(userManager, roleManager);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            //logger.LogError(ex, "An error occurred seeding the DB.");
-        }
-
-    }
+    //try
+    //{
+    //    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    //    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    //    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    //    await ContextSeed.SeedRolesAsync(userManager, roleManager);
+    //    await ContextSeed.SeedSuperAdminAsync(userManager, roleManager);
+    //}
+    //catch (Exception ex)
+    //{
+    //    Console.WriteLine(ex);
+    //    //logger.LogError(ex, "An error occurred seeding the DB.");
+    //}
 }
 else
 {

@@ -1,45 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MVCIdentityBookRecords.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using MVCIdentityBookRecords.Models;
+using MVCIdentityBookRecords.Interfaces;
+using MVCIdentityBookRecords.Responses.Categories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MVCIdentityBookRecords.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    [Authorize]
+    public class CategoriesController : BaseApiController
     {
-        private readonly ApplicationDbContext _context;
 
-        public CategoriesController(ApplicationDbContext context)
+        private readonly ICategoryService _categoryService;
+
+        public CategoriesController(ICategoryService categoryService)
         {
-            _context = context;
+            _categoryService = categoryService;
         }
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+        public async Task<IActionResult> GetCategories()
         {
-            return await _context.Categories.ToListAsync();
-        }
-
-        // GET: api/Categories/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(int id)
-        {
-            var category = await _context.Categories.FindAsync(id);
-
-            if (category == null)
+            var getCategoriesResponse = await _categoryService.GetCategoriesAsync();
+            if (!getCategoriesResponse.Success)
             {
                 return NotFound();
             }
 
-            return category;
+            var categoriesResponse = getCategoriesResponse.Categories.ConvertAll(o => new CategoryResponse
+            {
+                Idcategory = o.Idcategory,
+                CategoryName = o.CategoryName,
+
+            });
+
+            return Ok(categoriesResponse);
+
+           
+        }
+
+        // GET: api/Categories/5
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCategory(int id)
+        {
+            var categoryResponse = await _categoryService.GetCategoryByIdAsync(id);
+
+            if (!categoryResponse.Success)
+            {
+                return NotFound();
+            }
+
+            return Ok(new CategoryResponse
+            {
+                Idcategory = categoryResponse.Idcategory,
+                CategoryName = categoryResponse.CategoryName,
+            });
         }
 
         // PUT: api/Categories/5
@@ -52,22 +69,11 @@ namespace MVCIdentityBookRecords.Controllers.API
                 return BadRequest();
             }
 
-            _context.Entry(category).State = EntityState.Modified;
+            var categoryResponse = await _categoryService.UpdateCategoryAsync(id, category);
 
-            try
+            if (!categoryResponse.Success)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(category);
             }
 
             return NoContent();
@@ -76,33 +82,32 @@ namespace MVCIdentityBookRecords.Controllers.API
         // POST: api/Categories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        public async Task<IActionResult> PostCategory(Category category)
         {
-            _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
+            var categoryResponse = await _categoryService.CreateCategoryAsync(category);
 
-            return CreatedAtAction("GetCategory", new { id = category.Idcategory }, category);
+            if (!categoryResponse.Success)
+            {
+                return UnprocessableEntity(category);
+            }
+
+            return CreatedAtAction(nameof(GetCategory), new { id = category.Idcategory }, category);
+          
         }
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
+            var categoryResponse = await _categoryService.DeleteCategoryAsync(id);
+            if (!categoryResponse.Success)
             {
-                return NotFound();
+                return BadRequest();
             }
-
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CategoryExists(int id)
-        {
-            return _context.Categories.Any(e => e.Idcategory == id);
-        }
+      
     }
 }

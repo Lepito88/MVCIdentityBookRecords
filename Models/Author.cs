@@ -19,8 +19,5 @@ namespace MVCIdentityBookRecords.Models
         [JsonIgnore]
         public virtual ICollection<Book> Books { get; set; }
 
-        public string GetFullname() {
-            return Firstname + ' ' + Lastname;
-        }
     }
 }
