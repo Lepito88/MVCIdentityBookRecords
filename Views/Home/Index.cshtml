@@ -3,6 +3,30 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome To BookRecords Application</h1>
+</div>
+<div>
+    <h2>Application Routes</h2>
+    <ul>
+         <li class="">
+            <a  class="nav-link text-dark" href="/swagger"  title="Swagger">Swagger for API</a>
+        </li>
+        <li class="">
+            <a  class="nav-link text-dark" asp-controller="Authors" asp-action="Index"  title="Authors">Authors</a>
+        </li>
+        <li class="">
+            <a  class="nav-link text-dark" asp-controller="Books" asp-action="Index"  title="Books">Books</a>
+        </li>
+        <li class="">
+            <a  class="nav-link text-dark" asp-controller="Categories" asp-action="Index"  title="Categories">Categories</a>
+        </li>
+        <li class="">
+            <a  class="nav-link text-dark" asp-controller="UserRoles"  title="User Roles">User Roles</a>
+        </li>
+         <li class="">
+            <a  class="nav-link text-dark" asp-controller="RoleManager"  title="Role Manager">Role Manager</a>
+        </li>
+
+    </ul>
+
 </div>

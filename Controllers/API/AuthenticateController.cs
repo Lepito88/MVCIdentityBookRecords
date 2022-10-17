@@ -87,7 +87,8 @@ namespace MVCIdentityBookRecords.Controllers.API
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, new RegisterResponse { Success = false, Error = "User creation failed! Please check user details and try again." });
-            await _userManager.AddToRoleAsync(user, Roles.Basic.ToString());
+            //Add basic role to new user
+            await _userManager.AddToRoleAsync(user, UserRoles.Basic);
             return Ok(new RegisterResponse { Success = true, Email = user.Email, Username = user.UserName});
         }
 
