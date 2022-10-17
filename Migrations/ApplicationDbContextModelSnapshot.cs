@@ -20,6 +20,51 @@ namespace MVCIdentityBookRecords.Migrations
                 .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("ApplicationUserBook", b =>
+                {
+                    b.Property<int>("BooksBookId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("BooksBookId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("ApplicationUserBook", "Identity");
+                });
+
+            modelBuilder.Entity("AuthorBook", b =>
+                {
+                    b.Property<int>("AuthorsAuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BooksBookId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuthorsAuthorId", "BooksBookId");
+
+                    b.HasIndex("BooksBookId");
+
+                    b.ToTable("AuthorBook", "Identity");
+                });
+
+            modelBuilder.Entity("BookCategory", b =>
+                {
+                    b.Property<int>("BooksBookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoriesCategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BooksBookId", "CategoriesCategoryId");
+
+                    b.HasIndex("CategoriesCategoryId");
+
+                    b.ToTable("BookCategory", "Identity");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -224,6 +269,109 @@ namespace MVCIdentityBookRecords.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("User", "Identity");
+                });
+
+            modelBuilder.Entity("MVCIdentityBookRecords.Models.Author", b =>
+                {
+                    b.Property<int>("AuthorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Firstname")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Lastname")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("AuthorId");
+
+                    b.ToTable("Authors", "Identity");
+                });
+
+            modelBuilder.Entity("MVCIdentityBookRecords.Models.Book", b =>
+                {
+                    b.Property<int>("BookId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("BookName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Isbn")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("ReleaseDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("BookId");
+
+                    b.ToTable("Books", "Identity");
+                });
+
+            modelBuilder.Entity("MVCIdentityBookRecords.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories", "Identity");
+                });
+
+            modelBuilder.Entity("ApplicationUserBook", b =>
+                {
+                    b.HasOne("MVCIdentityBookRecords.Models.Book", null)
+                        .WithMany()
+                        .HasForeignKey("BooksBookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MVCIdentityBookRecords.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AuthorBook", b =>
+                {
+                    b.HasOne("MVCIdentityBookRecords.Models.Author", null)
+                        .WithMany()
+                        .HasForeignKey("AuthorsAuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MVCIdentityBookRecords.Models.Book", null)
+                        .WithMany()
+                        .HasForeignKey("BooksBookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BookCategory", b =>
+                {
+                    b.HasOne("MVCIdentityBookRecords.Models.Book", null)
+                        .WithMany()
+                        .HasForeignKey("BooksBookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MVCIdentityBookRecords.Models.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
