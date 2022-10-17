@@ -7,15 +7,17 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MVCIdentityBookRecords.Data;
 using MVCIdentityBookRecords.Interfaces;
-//using MVCIdentityBookRecords.Interfaces;
 using MVCIdentityBookRecords.Models;
 using MVCIdentityBookRecords.Services;
-//using MVCIdentityBookRecords.Services;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System.Configuration;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers();
 
 // Add services to the container.
 //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -83,7 +85,6 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 //builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-builder.Services.AddEndpointsApiExplorer();
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -99,8 +100,7 @@ builder.Services.AddTransient<IAuthorService, AuthorService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 //builder.Services.AddTransient<IUserService, UserService>();
 
-//builder.Services.AddTransient<IEntityRelationShipManagerService, EntityRelationShipManagerService>();
-
+builder.Services.AddTransient<IEntityRelationShipManagerService, EntityRelationShipManagerService>();
 var app = builder.Build();
 
 
@@ -108,6 +108,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
     app.UseMigrationsEndPoint();
     using var scope = app.Services.CreateScope();
     //var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
@@ -125,6 +127,14 @@ if (app.Environment.IsDevelopment())
     //    Console.WriteLine(ex);
     //    logger.LogError(ex, "An error occurred seeding the DB.");
     //}
+    app.MapGet("/debug/routes", (IEnumerable<EndpointDataSource> endpointSources) =>
+        string.Join("\n", endpointSources.SelectMany(source => source.Endpoints))
+        
+        
+        );
+
+
+
 }
 else
 {
@@ -133,10 +143,13 @@ else
     app.UseHsts();
 }
 
+
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",
