@@ -96,11 +96,11 @@ builder.Services.AddScoped<RoleManager<IdentityRole>>();
 //builder.Services.AddScoped<ILogger>();
 //builder.Services.AddTransient<ITokenService, TokenService>();
 //builder.Services.AddTransient<ILoginService, LoginService>();
+//builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddTransient<IBookService, BookService>();
 builder.Services.AddTransient<IAuthorService, AuthorService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
-//builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddTransient<IEntityRelationShipManagerService, EntityRelationShipManagerService>();
 var app = builder.Build();
