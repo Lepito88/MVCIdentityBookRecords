@@ -24,7 +24,13 @@ namespace MVCIdentityBookRecords.Controllers
         // GET: Books
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Books.ToListAsync());
+            var books = await _context.Books
+                .Include(_=> _.Authors)
+                .Include(_ => _.Categories)
+                .ToListAsync();
+
+
+              return View(books);
         }
 
         // GET: Books/Details/5
@@ -36,6 +42,8 @@ namespace MVCIdentityBookRecords.Controllers
             }
 
             var book = await _context.Books
+                .Include(_ => _.Authors)
+                .Include(_ => _.Categories)
                 .FirstOrDefaultAsync(m => m.BookId == id);
             if (book == null)
             {

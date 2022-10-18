@@ -27,6 +27,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Isbn)
             </th>
+            <th>
+                Authors
+            </th>
+            <th>
+                Categories
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -47,6 +53,20 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Isbn)
+            </td>
+            <td>
+                @foreach (var author in item.Authors)
+                {
+                    var au =  author.Firstname + " " + author.Lastname + ", ";
+                    @au
+                }
+            </td>
+            <td>
+                @foreach (var category in item.Categories)
+                {
+                    var ca = category.CategoryName + ", ";
+                    @ca
+                }
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |

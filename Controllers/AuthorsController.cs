@@ -36,6 +36,8 @@ namespace MVCIdentityBookRecords.Controllers
             }
 
             var author = await _context.Authors
+                .Include(_ => _.Books)
+                .ThenInclude(_ => _.Categories)
                 .FirstOrDefaultAsync(m => m.AuthorId == id);
             if (author == null)
             {

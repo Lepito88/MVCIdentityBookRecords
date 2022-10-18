@@ -36,6 +36,7 @@ namespace MVCIdentityBookRecords.Controllers
             }
 
             var category = await _context.Categories
+                .Include(_ => _.Books)
                 .FirstOrDefaultAsync(m => m.CategoryId == id);
             if (category == null)
             {
