@@ -25,6 +25,23 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @{
+                            if (User.Identity.IsAuthenticated)
+                            {                               
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark btn btn-outline-info" asp-controller="Home" asp-action="MyBooks"  >My Books</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark btn btn-outline-info" asp-controller="Books" asp-action="Index"  >Books</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark btn btn-outline-info" asp-controller="Authors" asp-action="Index"  >Authors</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark btn btn-outline-info" asp-controller="Categories" asp-action="Index"  >Categories</a>
+                                </li>
+                            }
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

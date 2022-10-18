@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVCIdentityBookRecords.Data;
+using MVCIdentityBookRecords.Interfaces;
 using MVCIdentityBookRecords.Models;
+using MVCIdentityBookRecords.Requests;
 
 namespace MVCIdentityBookRecords.Controllers
 {
@@ -15,18 +17,35 @@ namespace MVCIdentityBookRecords.Controllers
     public class BooksController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IEntityRelationShipManagerService _entityRelationShipManagerService;
 
-        public BooksController(ApplicationDbContext context)
+        public BooksController(ApplicationDbContext context, IEntityRelationShipManagerService entityRelationShipManagerService)
         {
             _context = context;
+            _entityRelationShipManagerService = entityRelationShipManagerService;
         }
 
         // GET: Books
         public async Task<IActionResult> Index()
         {
+            var signedInUserIdFromCookie = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            if (signedInUserIdFromCookie.Value == null)
+                    return View();
+            //}
+
+            //Get user
+            //var userBooks = await _context.Users
+            //    .Where(_ => _.Id == signedInUserIdFromCookie.Value)
+            //    .Include(_ => _.Books)
+            //    .FirstOrDefaultAsync();
+            //if (userBooks == null)
+            //    return NotFound();
+
+
             var books = await _context.Books
                 .Include(_=> _.Authors)
                 .Include(_ => _.Categories)
+                .Include(_=> _.Users.Where(_ => _.Id == signedInUserIdFromCookie.Value))
                 .ToListAsync();
 
 
@@ -166,6 +185,64 @@ namespace MVCIdentityBookRecords.Controllers
         private bool BookExists(int id)
         {
           return _context.Books.Any(e => e.BookId == id);
+    }
+    
+        [HttpPost, ActionName("ManageUserBookRelationship")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ManageUserBookRelationship(string UserId, int BookId, string ActionType)
+        {
+            if (UserId == null || BookId == null || ActionType == null)
+            {
+                return Problem("UserId, BookId or Action type is null");
+            }
+            if (ActionType == "Add")
+            {
+                try
+                {
+                    RelationshipRequest rs = new RelationshipRequest
+                    {
+                        UserId = UserId,
+                        BookId = BookId,
+                    };
+                    var resp = await _entityRelationShipManagerService.AddBookToUserAsync(rs);
+                    if (!resp.Success)
+                    {
+                        return BadRequest(new { resp.Error });
+                    }
+                    return RedirectToAction(nameof(Index));
+                    //return View(resp);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            if (ActionType == "Remove")
+            {
+                try
+                {
+                    RelationshipRequest rs = new RelationshipRequest
+                    {
+                        UserId = UserId,
+                        BookId = BookId,
+                    };
+                    var resp = await _entityRelationShipManagerService.RemoveBookFromUserAsync(rs);
+                    if (!resp.Success)
+                    {
+                        return BadRequest(new { resp.Error});
+                    }
+                    return RedirectToAction(nameof(Index));
+
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex);
+                    throw;
+                }
+            }
+            
+            return RedirectToAction(nameof(Index));
         }
     }
 }

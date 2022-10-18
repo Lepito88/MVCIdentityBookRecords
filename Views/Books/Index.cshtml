@@ -7,7 +7,7 @@
 <h1>Books</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -69,11 +69,35 @@
                 }
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BookId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+                <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.BookId">Edit</a> 
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.BookId">Details</a> 
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+               
+                    @{
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            <form class="" method="post" asp-action="ManageUserBookRelationship">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="@item.BookId" name="BookId"/>
+                                <input type="hidden" name="UserId" asp-for="@SignedInUser.Value" />
+                                <input type="hidden" name="ActionType" value="Add"/>
+                                <input type="submit"  action="ManageUserBookRelationship" value="Add To @User.Identity.Name" class="btn btn-outline-secondary" />
+                            </form>
+                        }
+                }
             </td>
         </tr>
 }
     </tbody>
 </table>
+@*@if (User.Identity.IsAuthenticated)
+{
+    <table class="table table-sm">
+        @foreach ( var claim in User.Claims ) {
+            <tr>
+                <td>@claim.Type</td>
+                <td>@claim.Value</td>
+            </tr>
+        }
+    </table>
+}*@

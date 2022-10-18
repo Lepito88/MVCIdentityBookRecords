@@ -11,6 +11,7 @@ using System.Net.Mail;
 using System.Text.Encodings.Web;
 using System.Text;
 using MVCIdentityBookRecords.Requests;
+using MVCIdentityBookRecords.Interfaces;
 
 namespace MVCIdentityBookRecords.Controllers
 {
@@ -22,6 +23,7 @@ namespace MVCIdentityBookRecords.Controllers
         //private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<ApplicationUsersController> _logger;
         //private readonly IEmailSender _emailSender;
+        private readonly IEntityRelationShipManagerService _entityRelationShipManager;
         
         public string ReturnUrl { get; set; } = "";
         [TempData]
@@ -34,7 +36,8 @@ namespace MVCIdentityBookRecords.Controllers
             IUserStore<ApplicationUser> userStore,
            // IUserEmailStore<ApplicationUser> emailStore,
             //IEmailSender emailSender,
-            ILogger<ApplicationUsersController> logger)
+            ILogger<ApplicationUsersController> logger,
+            IEntityRelationShipManagerService entityRelationShipManager)
         {
             _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
@@ -42,6 +45,7 @@ namespace MVCIdentityBookRecords.Controllers
             //_emailStore = emailStore ?? throw new ArgumentNullException(nameof(emailStore));
             //_emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _entityRelationShipManager = entityRelationShipManager ?? throw new ArgumentNullException(nameof(entityRelationShipManager));
         }
 
 
@@ -270,6 +274,65 @@ namespace MVCIdentityBookRecords.Controllers
             {
                 return View();
             }
+        }
+
+
+        [HttpPost, ActionName("ManageUserBookRelationship")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ManageUserBookRelationship(string UserId, int BookId, string ActionType)
+        {
+            if (UserId == null || BookId == null || ActionType == null)
+            {
+                return Problem("UserId, BookId or Action type is null");
+            }
+            //if (ActionType == "Add")
+            //{
+            //    try
+            //    {
+            //        RelationshipRequest rs = new RelationshipRequest
+            //        {
+            //            UserId = UserId,
+            //            BookId = BookId,
+            //        };
+            //        var resp = await _entityRelationShipManagerService.AddBookToUserAsync(rs);
+            //        if (!resp.Success)
+            //        {
+            //            return BadRequest(new { resp.Error });
+            //        }
+            //        return RedirectToAction(nameof(Index));
+            //        //return View(resp);
+            //    }
+            //    catch (Exception)
+            //    {
+
+            //        throw;
+            //    }
+            //}
+            if (ActionType == "Remove")
+            {
+                try
+                {
+                    RelationshipRequest rs = new RelationshipRequest
+                    {
+                        UserId = UserId,
+                        BookId = BookId,
+                    };
+                    var resp = await _entityRelationShipManager.RemoveBookFromUserAsync(rs);
+                    if (!resp.Success)
+                    {
+                        return BadRequest(new { resp.Error });
+                    }
+                    return Redirect("/users/details/"+UserId);
+
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex);
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Details));
         }
     }
 }
