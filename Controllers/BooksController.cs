@@ -187,23 +187,99 @@ namespace MVCIdentityBookRecords.Controllers
           return _context.Books.Any(e => e.BookId == id);
     }
     
-        [HttpPost, ActionName("ManageUserBookRelationship")]
+       
+
+        [HttpPost, ActionName("ManageBookRelationship")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ManageUserBookRelationship(string UserId, int BookId, string ActionType)
+        public async Task<IActionResult> ManageBookRelationship(string UserId,int AuthorId, int BookId, int CategoryId, string ActionType)
         {
-            if (UserId == null || BookId == null || ActionType == null)
+            if (ActionType == null)
             {
-                return Problem("UserId, BookId or Action type is null");
+                return Problem("Something unexpected happened");
             }
-            if (ActionType == "Add")
+            RelationshipRequest rs = new RelationshipRequest
+            {
+                UserId=UserId,
+                CategoryId=CategoryId,
+                AuthorId = AuthorId,
+                BookId = BookId,
+            };
+            if (ActionType == "AddAuthor")
             {
                 try
                 {
-                    RelationshipRequest rs = new RelationshipRequest
+                    var resp = await _entityRelationShipManagerService.AddAuthorToBookAsync(rs);
+                    if (!resp.Success)
                     {
-                        UserId = UserId,
-                        BookId = BookId,
-                    };
+                        return BadRequest(new { resp.Error });
+                    }
+                    return RedirectToAction("ManageBookRelationships", "Books");
+                    //return View(resp);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            if (ActionType == "RemoveAuthor")
+            {
+                try
+                {
+                    var resp = await _entityRelationShipManagerService.RemoveAuthorFromBookAsync(rs);
+                    if (!resp.Success)
+                    {
+                        return BadRequest(new { resp.Error });
+                    }
+                    return RedirectToAction("ManageBookRelationships", "Books");
+
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex);
+                    throw;
+                }
+            }
+            if (ActionType == "AddCategory")
+            {
+                try
+                {
+                    var resp = await _entityRelationShipManagerService.AddCategoryToBookAsync(rs);
+                    if (!resp.Success)
+                    {
+                        return BadRequest(new { resp.Error });
+                    }
+                    return RedirectToAction("ManageBookRelationships", "Books");
+                    //return View(resp);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            if (ActionType == "RemoveCategory")
+            {
+                try
+                {
+                    var resp = await _entityRelationShipManagerService.RemoveCategoryFromBookAsync(rs);
+                    if (!resp.Success)
+                    {
+                        return BadRequest(new { resp.Error });
+                    }
+                    return RedirectToAction("ManageBookRelationships", "Books");
+                    //return View(resp);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            if (ActionType == "AddBook")
+            {
+                try
+                {
                     var resp = await _entityRelationShipManagerService.AddBookToUserAsync(rs);
                     if (!resp.Success)
                     {
@@ -218,31 +294,51 @@ namespace MVCIdentityBookRecords.Controllers
                     throw;
                 }
             }
-            if (ActionType == "Remove")
+            if (ActionType == "RemoveBook")
             {
                 try
                 {
-                    RelationshipRequest rs = new RelationshipRequest
-                    {
-                        UserId = UserId,
-                        BookId = BookId,
-                    };
+                    
                     var resp = await _entityRelationShipManagerService.RemoveBookFromUserAsync(rs);
                     if (!resp.Success)
                     {
-                        return BadRequest(new { resp.Error});
+                        return BadRequest(new { resp.Error });
                     }
-                    return RedirectToAction(nameof(Index));
-
+                    return RedirectToAction("mybooks","Home");
+                    //return View(resp);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    return BadRequest(ex);
+
                     throw;
                 }
             }
-            
+
             return RedirectToAction(nameof(Index));
+        }
+        public async Task<ActionResult> ManageBookRelationships()
+        {
+            var authors = await _context.Authors.ToListAsync();
+            if (authors.Count == 0)
+                return View("No books");
+            var books = await _context.Books.ToListAsync();
+            if (books.Count == 0)
+            {
+                return View("No Authors");
+            }
+            var categories = _context.Categories.ToList();
+            if (categories.Count == 0)
+            {
+                return View("No Categories");
+            }
+            var data = new AddAuthorsData
+            {
+                Authors = authors,
+                Books = books,
+                Categories = categories
+
+            };
+            return View(data);
         }
     }
 }

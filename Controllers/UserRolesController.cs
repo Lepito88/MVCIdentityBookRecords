@@ -6,7 +6,7 @@ using MVCIdentityBookRecords.Models;
 
 namespace MVCIdentityBookRecords.Controllers
 {
-    [Authorize(Roles = "SuperAdmin,Admin")]
+    [Authorize(Roles = "SuperAdmin")]
     public class UserRolesController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCIdentityBookRecords.Interfaces;
@@ -36,7 +37,7 @@ namespace MVCIdentityBookRecords.Controllers
         {
             return View();
         }
-
+        [Authorize]
         public async Task<IActionResult> MyBooks()
         {
             var UserId= HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
@@ -53,63 +54,6 @@ namespace MVCIdentityBookRecords.Controllers
                 return View();
            
             return View(user);
-        }
-        [HttpPost, ActionName("ManageUserBookRelationship")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ManageUserBookRelationship(string UserId, int BookId, string ActionType)
-        {
-            if (UserId == null || BookId == null || ActionType == null)
-            {
-                return Problem("UserId, BookId or Action type is null");
-            }
-            //if (ActionType == "Add")
-            //{
-            //    try
-            //    {
-            //        RelationshipRequest rs = new RelationshipRequest
-            //        {
-            //            UserId = UserId,
-            //            BookId = BookId,
-            //        };
-            //        var resp = await _entityRelationShipManagerService.AddBookToUserAsync(rs);
-            //        if (!resp.Success)
-            //        {
-            //            return BadRequest(new { resp.Error });
-            //        }
-            //        return RedirectToAction(nameof(Index));
-            //        //return View(resp);
-            //    }
-            //    catch (Exception)
-            //    {
-
-            //        throw;
-            //    }
-            //}
-            if (ActionType == "Remove")
-            {
-                try
-                {
-                    RelationshipRequest rs = new RelationshipRequest
-                    {
-                        UserId = UserId,
-                        BookId = BookId,
-                    };
-                    var resp = await _entityRelationShipManagerService.RemoveBookFromUserAsync(rs);
-                    if (!resp.Success)
-                    {
-                        return BadRequest(new { resp.Error });
-                    }
-                    return RedirectToAction(nameof(MyBooks));
-
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex);
-                    throw;
-                }
-            }
-
-            return RedirectToAction(nameof(MyBooks));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

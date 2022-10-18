@@ -9,6 +9,9 @@
 <p>
     <a class="btn btn-primary" asp-action="Create">Create New</a>
 </p>
+<p>
+    <a class="btn btn-primary" asp-action="ManageBookRelationships">Add/Remove Author</a>
+</p>
 <table class="table">
     <thead>
         <tr>
@@ -76,13 +79,17 @@
                     @{
                         if (User.Identity.IsAuthenticated)
                         {
-                            <form class="" method="post" asp-action="ManageUserBookRelationship">
-                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                <input type="hidden" asp-for="@item.BookId" name="BookId"/>
-                                <input type="hidden" name="UserId" asp-for="@SignedInUser.Value" />
-                                <input type="hidden" name="ActionType" value="Add"/>
-                                <input type="submit"  action="ManageUserBookRelationship" value="Add To @User.Identity.Name" class="btn btn-outline-secondary" />
-                            </form>
+                            var SignedInUser = @User.Claims.FirstOrDefault(_ => _.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+                         
+                                <form class="" method="post" asp-action="ManageBookRelationship">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input type="hidden" asp-for="@item.BookId" name="BookId"/>
+                                    <input type="hidden" name="UserId" asp-for="@SignedInUser.Value" />
+                                    <input type="hidden" name="ActionType" value="AddBook"/>
+                                    <input type="submit"  action="ManageBookRelationship" value="Add To @User.Identity.Name" class="btn btn-outline-secondary" />
+                                </form>
+                                
+                            
                         }
                 }
             </td>

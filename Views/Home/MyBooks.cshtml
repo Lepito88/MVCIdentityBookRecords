@@ -151,12 +151,12 @@
                                                 if (User.Identity.IsAuthenticated)
                                                 {
 
-                                                        <form class="" method="post" asp-action="ManageUserBookRelationship">
+                                                        <form class="" method="post" asp-controller="Books" asp-action="ManageBookRelationship">
                                                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                                             <input type="hidden" asp-for="@book.BookId" name="BookId"/>
                                                             <input type="hidden" name="UserId" asp-for="@Model.Id" />
-                                                            <input type="hidden" name="ActionType" value="Remove"/>
-                                                            <input type="submit"  action="ManageUserBookRelationship" value="Remove From @Model.UserName" class="btn btn-outline-secondary" />
+                                                            <input type="hidden" name="ActionType" value="RemoveBook"/>
+                                                            <input type="submit"  action="ManageBookRelationship" value="Remove From @Model.UserName" class="btn btn-outline-secondary" />
                                                         </form>
                                                 }
                                             }

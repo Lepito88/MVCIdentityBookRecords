@@ -12,9 +12,11 @@ using System.Text.Encodings.Web;
 using System.Text;
 using MVCIdentityBookRecords.Requests;
 using MVCIdentityBookRecords.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MVCIdentityBookRecords.Controllers
 {
+    [Authorize(Roles = "SuperAdmin")]
     public class UsersController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -277,62 +279,6 @@ namespace MVCIdentityBookRecords.Controllers
         }
 
 
-        [HttpPost, ActionName("ManageUserBookRelationship")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ManageUserBookRelationship(string UserId, int BookId, string ActionType)
-        {
-            if (UserId == null || BookId == null || ActionType == null)
-            {
-                return Problem("UserId, BookId or Action type is null");
-            }
-            //if (ActionType == "Add")
-            //{
-            //    try
-            //    {
-            //        RelationshipRequest rs = new RelationshipRequest
-            //        {
-            //            UserId = UserId,
-            //            BookId = BookId,
-            //        };
-            //        var resp = await _entityRelationShipManagerService.AddBookToUserAsync(rs);
-            //        if (!resp.Success)
-            //        {
-            //            return BadRequest(new { resp.Error });
-            //        }
-            //        return RedirectToAction(nameof(Index));
-            //        //return View(resp);
-            //    }
-            //    catch (Exception)
-            //    {
-
-            //        throw;
-            //    }
-            //}
-            if (ActionType == "Remove")
-            {
-                try
-                {
-                    RelationshipRequest rs = new RelationshipRequest
-                    {
-                        UserId = UserId,
-                        BookId = BookId,
-                    };
-                    var resp = await _entityRelationShipManager.RemoveBookFromUserAsync(rs);
-                    if (!resp.Success)
-                    {
-                        return BadRequest(new { resp.Error });
-                    }
-                    return Redirect("/users/details/"+UserId);
-
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex);
-                    throw;
-                }
-            }
-
-            return RedirectToAction(nameof(Details));
-        }
+       
     }
 }

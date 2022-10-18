@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MVCIdentityBookRecords.Controllers
 {
-    [Authorize(Roles ="SuperAdmin,Admin")]
+    [Authorize(Roles ="SuperAdmin")]
     public class RoleManagerController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
