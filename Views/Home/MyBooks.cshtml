@@ -1,0 +1,187 @@
+﻿@model MVCIdentityBookRecords.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "My Books";
+}
+
+<h1 class="m-3 text-center">User Details for user <b>@Model.UserName</b> </h1>
+
+<div class="container d-flex  flex-column">
+    
+    <hr />
+    <div class="d-flex flex-sm-column text-wrap flex-wrap " >
+         <div class=" card justify-content-start flex-row"   >
+            <div class="card-header text-center" >
+                    <h4 class="card-title">@Model.UserName </h4> 
+                <div class="">
+
+                    @if (Model.ProfilePicture != null)
+                    {
+                    <img class="card-img" id="profilePicture" style="width:100%;height:100%; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.ProfilePicture))">
+                    }
+                    else
+                    {
+                    <img id="profilePicture" style="width:150px;height:150px; object-fit:cover" src="">
+                    }
+                </div>
+            </div>
+            <div class="card-body d-flex flex-column flex-sm-wrap" style="width:100%">
+                <div class="row ">
+                    <div class="col-sm-3 text-nowrap edit-detail-label">
+                        @Html.DisplayNameFor(model => model.Id)
+                    </div>
+                    <div class="col-sm-9 ">
+                        @Html.DisplayFor(model => model.Id)
+                    </div>
+                    <div class="col-sm-3 text-nowrap edit-detail-label">
+                        @Html.DisplayNameFor(model => model.UserName)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.DisplayFor(model => model.UserName)
+                    </div>
+                    <div class="col-sm-3 text-nowrap edit-detail-label">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.DisplayFor(model => model.Email)
+                    </div>
+                    <div class="col-sm-3 text-nowrap edit-detail-label">
+                        @Html.DisplayNameFor(model => model.FirstName)
+                    </div>
+                    <div class="col-sm-9 ">
+                        @Html.DisplayFor(model => model.FirstName)
+                    </div>
+                    <div class="col-sm-3 text-nowrap edit-detail-label">
+                        @Html.DisplayNameFor(model => model.LastName)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.DisplayFor(model => model.LastName)
+                    </div>
+                    <div class="col-sm-3 text-nowrap edit-detail-label">
+                        @Html.DisplayNameFor(model => model.PhoneNumber)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.DisplayFor(model => model.PhoneNumber)
+                    </div>
+                </div>
+                <div class="card-footer flex-column">
+                    <a class="btn btn-primary" asp-action="Index">Back to List</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <div id="user-books" class="container user-books text-center flex-sm-column flex-column flex-wrap">
+        @{
+            if (Model.Books.Count == 0)
+            {
+                <hr />
+                <h2>User has no books</h2>
+                <hr />
+            }else{
+                <hr />
+                <h3>User Books</h3>
+                <hr />
+                <table class="table table-borderless table-hover table-striped table-responsive">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Book Id</th>
+                        <th>Book Name</th>
+                        <th>Book Type</th>
+                        <th>Release Year</th>
+                        <th>Isbn</th>
+                        <th>Authors</th>
+                        <th>Categories</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        if (Model.Books.Count > 0)
+                        {
+                            foreach (var book in Model.Books)
+                            {
+                                <tr>
+                                    <td>@book.BookId</td>
+                                    <td>@book.BookName</td>
+                                    <td>@book.Type</td>
+                                    <td>@book.ReleaseDate  </td>
+                                    <td>@book.Isbn</td>
+                                    <td>
+                                    @{
+                                        var au = "";
+                                        foreach (var author in book.Authors)
+                                        {
+
+                                            if (book.Authors.Count > 1)
+                                            {
+                                                au = string.Join(", ", author.Firstname + " " + author.Lastname+", ");
+                                                @au
+                                            }else{
+
+                                                 au = string.Join(", ",author.Firstname+ " "+author.Lastname );
+                                                @au
+                                            }
+                                        }
+                                    }
+                                    </td>
+                                    <td>
+                                    @{
+                                        var ca = "";
+                                        foreach (var category in book.Categories)
+                                        {
+
+                                            if (book.Authors.Count > 1)
+                                            {
+                                                ca = string.Join(", ", category.CategoryName+", " );
+                                                @ca
+                                            }
+                                            else
+                                            {
+
+                                                au = string.Join(", ", category.CategoryName+ ", ");
+                                                @au
+                                            }
+                                        }
+                                    }
+                                    </td>
+                                    <td>
+                                            @{
+                                                if (User.Identity.IsAuthenticated)
+                                                {
+
+                                                        <form class="" method="post" asp-controller="Books" asp-action="ManageBookRelationship">
+                                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                            <input type="hidden" asp-for="@book.BookId" name="BookId"/>
+                                                            <input type="hidden" name="UserId" asp-for="@Model.Id" />
+                                                            <input type="hidden" name="ActionType" value="RemoveBook"/>
+                                                            <input type="submit"  action="ManageBookRelationship" value="Remove From @Model.UserName" class="btn btn-outline-secondary" />
+                                                        </form>
+                                                }
+                                            }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+
+            }
+        }
+    </div>
+</div>
+
+@*    
+@if (User.Identity.IsAuthenticated)
+{
+    <table class="table table-sm">
+        @foreach ( var claim in User.Claims ) {
+            <tr>
+                <td>@claim.Type</td>
+                <td>@claim.Value</td>
+            </tr>
+        }
+    </table>
+}*@

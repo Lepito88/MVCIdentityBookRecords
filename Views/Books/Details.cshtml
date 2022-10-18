@@ -9,34 +9,104 @@
 <div>
     <h4>Book</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BookName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BookName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReleaseDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReleaseDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Type)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Isbn)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Isbn)
-        </dd>
-    </dl>
+    <div class=" card justify-content-start flex-row"   >
+            <div class="card-header text-center" >
+                <h4 class="card-title">@Model.BookName </h4> 
+            </div>
+            <div class="card-body d-flex flex-column flex-sm-wrap" style="width:100%">
+                <div class="row ">
+                    <div class="col-sm-3 text-nowrap edit-detail-label">
+                    @Html.DisplayNameFor(model => model.BookId)
+                    </div>
+                    <div class="col-sm-9 ">
+                    @Html.DisplayFor(model => model.BookId)
+                    </div>
+                    <div class="col-sm-3 text-nowrap edit-detail-label">
+                    @Html.DisplayNameFor(model => model.BookName)
+                    </div>
+                    <div class="col-sm-9">
+                    @Html.DisplayFor(model => model.BookName)
+                    </div>
+                    <div class="col-sm-3 text-nowrap edit-detail-label">
+                    @Html.DisplayNameFor(model => model.Type)
+                    </div>
+                    <div class="col-sm-9">
+                    @Html.DisplayFor(model => model.Type)
+                    </div>
+                    <div class="col-sm-3 text-nowrap edit-detail-label">
+                    @Html.DisplayNameFor(model => model.ReleaseDate)
+                    </div>
+                    <div class="col-sm-9 ">
+                    @Html.DisplayFor(model => model.ReleaseDate)
+                    </div>
+                    <div class="col-sm-3 text-nowrap edit-detail-label">
+                    @Html.DisplayNameFor(model => model.Isbn)
+                    </div>
+                    <div class="col-sm-9">
+                    @Html.DisplayFor(model => model.Isbn)
+                    </div>
+                    @{
+                        if (Model.Authors.Count == 0)
+                        {
+                            <div class="col-sm-12 text-nowrap edit-detail-label">
+                                Authors not added to this book
+                            </div>
+                        }else{
+                            <div class="col-sm-3 text-nowrap edit-detail-label">
+                                Authors
+                            </div>
+
+                            <div class="col-sm-9">
+                            @{
+                                string au = "";
+                                if (Model.Authors.Count > 0)
+                                {
+                                    foreach (var author in Model.Authors)
+                                    {
+                                        au = author.Firstname + " " + author.Lastname+ ", ";
+                                        @au
+                                    }
+                                }
+                            }
+                            </div>
+                        }
+                    }
+                    @{
+                        if (Model.Categories.Count == 0)
+                        {
+                            <div class="col-sm-12 text-nowrap edit-detail-label">
+                               There are no Categories added to this book.
+                        </div>
+                    }
+                    else{
+                        <div class="col-sm-3 text-nowrap edit-detail-label">
+                            Categories
+                        </div>
+
+                        <div class="col-sm-9">
+                            @{
+                                string ca = "";
+                                foreach (var category in Model.Categories)
+                                {
+                                    ca = category.CategoryName + ", ";
+                                    @ca
+                                }
+                           }
+                           </div>
+
+                        }
+                    }
+
+                </div>
+                <div class="card-footer flex-column">
+                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.BookId">Edit</a> 
+                    <a class="btn btn-primary" asp-action="Index">Back to List</a>
+                </div>
+
+            </div>
+        </div>
 </div>
-<div>
+@*<div>
     <a asp-action="Edit" asp-route-id="@Model?.BookId">Edit</a> |
     <a asp-action="Index">Back to List</a>
-</div>
+</div>*@

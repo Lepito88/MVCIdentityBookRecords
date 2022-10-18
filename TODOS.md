@@ -5,4 +5,6 @@
 - There is something wrong in API Authorize => When sending request it returns HTML login page response.
 - Check [Authorize] tags to All controllers
 - Modify Pages
-- 
+- ADD button to Add/remove book to user
+- ADD button to Add/remove Author to book
+- ADD button to Add/remove Category to book

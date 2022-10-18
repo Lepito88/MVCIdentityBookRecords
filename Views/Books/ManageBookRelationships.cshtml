@@ -1,0 +1,144 @@
+﻿@model MVCIdentityBookRecords.Requests.AddAuthorsData
+@{
+    ViewData["Title"] = "Add/Remove Authors/Categories";
+}
+
+<h1>Add/Remove Authors To/From Book</h1>
+<hr />
+<div class="container">
+
+    <form class="form-control" method="post" asp-action="ManageBookRelationship">
+         <div class="col-sm-3">
+            <label class="" for="selectedAuthor">Author</label>
+            <select class="form-select" id="selectedAuthor" name="AuthorId">
+              <option selected>Author</option>
+              @{
+                  foreach(var author in Model.Authors){
+                    <option value="@author.AuthorId">@author.Firstname @author.Lastname</option>
+                  }
+              }
+            </select>
+        </div>
+         <div class="col-sm-3 ">
+            <label class="" for="selectedBook">Book</label>
+            <select class="form-select" id="selectedBook" name="BookId">
+              <option selected>Book</option>
+                @{
+                    foreach (var book in Model.Books)
+                    {
+                        <option value="@book.BookId">@book.BookName</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="ActionType" id="addauthor" value="AddAuthor" checked>
+                <label class="form-check-label" for="addauthor">
+                    Add Author to book
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="ActionType" id="removeauthor" value="RemoveAuthor" >
+                <label class="form-check-label" for="removeauthor">
+                    Remove Author From book
+                </label>
+            </div>
+        </div>
+        <div>
+            <button class="btn btn-primary" type="submit">Add</button>
+        </div>
+    </form>
+    <hr />
+    <h2>Add/Remove Categories To/From Book</h2>
+    <form class="form-control" method="post" asp-action="ManageBookRelationship">
+         <div class="col-sm-3">
+            <label class="" for="selectedCategory">Category</label>
+            <select class="form-select" id="selectedCategory" name="CategoryId">
+              <option selected>Category</option>
+                @{
+                    foreach (var category in Model.Categories)
+                    {
+                            <option value="@category.CategoryId">@category.CategoryName </option>
+                    }
+                }
+            </select>
+        </div>
+         <div class="col-sm-3 ">
+            <label class="" for="selectedBook">Book</label>
+            <select class="form-select" id="selectedBook" name="BookId">
+              <option selected>Book</option>
+                @{
+                    foreach (var book in Model.Books)
+                    {
+                                <option value="@book.BookId">@book.BookName</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="ActionType" id="addcategory" value="AddCategory" checked>
+                <label class="form-check-label" for="addcategory">
+                    Add Category to book
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="ActionType" id="removecategory" value="RemoveCategory" >
+                <label class="form-check-label" for="removecategory">
+                    Remove Category From book
+                </label>
+            </div>
+        </div>
+        <div>
+            <button class="btn btn-primary" type="submit">Add</button>
+        </div>
+    </form>
+    @{
+        //if (User.Identity.IsAuthenticated)
+        //{
+            //var books = Model.Books;
+        //    foreach (var author in Model.Authors)
+        //    {            
+        //        <div class="card-container">
+        //            <div class="card">
+        //                <div class="card-header text-center">
+        //                    <span class="">Author name</span>
+        //                </div>
+        //                <div class="card-body">
+        //                    <div class="row ">
+        //                        <div class="col-sm-3 text-nowrap edit-detail-label">
+        //                            AuthorId
+        //                        </div>
+        //                        <div class="col-sm-9 ">
+        //                            @author.AuthorId
+        //                        </div>
+        //                        <div class="col-sm-3 text-nowrap edit-detail-label">
+        //                            Firstname
+        //                        </div>
+        //                        <div class="col-sm-9">
+        //                            @author.Firstname
+        //                        </div>
+        //                        <div class="col-sm-3 text-nowrap edit-detail-label">
+        //                            Lastname
+        //                        </div>
+        //                        <div class="col-sm-9">
+        //                            @author.Lastname
+        //                        </div>
+        //                        <div class="">
+                                    
+        //                            <a class="btn btn-primary" href="" >Add To book </a> 
+        //                        </div>
+        //                    </div>
+        //                </div>
+
+        //            </div>
+        //        </div>
+        //    }
+
+        //}
+    }
+</div>
+@{
+  
+}

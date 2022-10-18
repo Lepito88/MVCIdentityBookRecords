@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using MVCIdentityBookRecords.Models;
 
 namespace MVCIdentityBookRecords.Controllers
 {
+    [Authorize]
     public class AuthorsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -34,6 +36,8 @@ namespace MVCIdentityBookRecords.Controllers
             }
 
             var author = await _context.Authors
+                .Include(_ => _.Books)
+                .ThenInclude(_ => _.Categories)
                 .FirstOrDefaultAsync(m => m.AuthorId == id);
             if (author == null)
             {

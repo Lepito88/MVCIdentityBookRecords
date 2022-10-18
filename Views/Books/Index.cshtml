@@ -4,14 +4,20 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Books</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
+</p>
+<p>
+    <a class="btn btn-primary" asp-action="ManageBookRelationships">Add/Remove Author</a>
 </p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BookId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.BookName)
             </th>
@@ -24,12 +30,21 @@
             <th>
                 @Html.DisplayNameFor(model => model.Isbn)
             </th>
+            <th>
+                Authors
+            </th>
+            <th>
+                Categories
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+             <td>
+                @Html.DisplayFor(modelItem => item.BookId)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.BookName)
             </td>
@@ -43,11 +58,53 @@
                 @Html.DisplayFor(modelItem => item.Isbn)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BookId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+                @foreach (var author in item.Authors)
+                {
+                    var au =  author.Firstname + " " + author.Lastname + ", ";
+                    @au
+                }
+            </td>
+            <td>
+                @foreach (var category in item.Categories)
+                {
+                    var ca = category.CategoryName + ", ";
+                    @ca
+                }
+            </td>
+            <td>
+                <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.BookId">Edit</a> 
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.BookId">Details</a> 
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+               
+                    @{
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            var SignedInUser = @User.Claims.FirstOrDefault(_ => _.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+                         
+                                <form class="" method="post" asp-action="ManageBookRelationship">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input type="hidden" asp-for="@item.BookId" name="BookId"/>
+                                    <input type="hidden" name="UserId" asp-for="@SignedInUser.Value" />
+                                    <input type="hidden" name="ActionType" value="AddBook"/>
+                                    <input type="submit"  action="ManageBookRelationship" value="Add To @User.Identity.Name" class="btn btn-outline-secondary" />
+                                </form>
+                                
+                            
+                        }
+                }
             </td>
         </tr>
 }
     </tbody>
 </table>
+@*@if (User.Identity.IsAuthenticated)
+{
+    <table class="table table-sm">
+        @foreach ( var claim in User.Claims ) {
+            <tr>
+                <td>@claim.Type</td>
+                <td>@claim.Value</td>
+            </tr>
+        }
+    </table>
+}*@

@@ -6,27 +6,75 @@
     <h1 class="display-4">Welcome To BookRecords Application</h1>
 </div>
 <div>
-    <h2>Application Routes</h2>
-    <ul>
-         <li class="">
-            <a  class="nav-link text-dark" href="/swagger"  title="Swagger">Swagger for API</a>
-        </li>
-        <li class="">
-            <a  class="nav-link text-dark" asp-controller="Authors" asp-action="Index"  title="Authors">Authors</a>
-        </li>
-        <li class="">
-            <a  class="nav-link text-dark" asp-controller="Books" asp-action="Index"  title="Books">Books</a>
-        </li>
-        <li class="">
-            <a  class="nav-link text-dark" asp-controller="Categories" asp-action="Index"  title="Categories">Categories</a>
-        </li>
-        <li class="">
-            <a  class="nav-link text-dark" asp-controller="UserRoles"  title="User Roles">User Roles</a>
-        </li>
-         <li class="">
-            <a  class="nav-link text-dark" asp-controller="RoleManager"  title="Role Manager">Role Manager</a>
-        </li>
+    <div class="container-fluid container-md">
+        <div class="card">
+            <div class="card-header text-center bg-info">
+                <h2>Application Routes</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover table-striped table-bordered">
+                    <thead class="text-center">
+                        <tr>
+                            <th>Route</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a class="nav-link text-dark" href="/swagger"  title="Swagger">Swagger for API</a></td>
+                            <td>Requires more Configuration. Currently does not accept Authorization headers.</td>
+                        </tr>
+                        <tr>
+                            <td><a  class="nav-link text-dark" asp-controller="Authors" asp-action="Index"  title="Authors">Authors</a></td>
+                            <td>
+                                List all authors.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a  class="nav-link text-dark" asp-controller="Books" asp-action="Index"  title="Books">Books</a></td>
+                            <td>
+                                List all books
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> <a  class="nav-link text-dark" asp-controller="Categories" asp-action="Index"  title="Categories">Categories</a></td>
+                            <td>
+                                List all Categories
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a  class="nav-link text-dark" asp-controller="UserRoles"  title="User Roles">User Roles</a></td>
+                            <td>
+                                List/Add/Remove user roles, Requires SuperAdmin, Admin roles
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a  class="nav-link text-dark" asp-controller="RoleManager"  title="Role Manager">Role Manager</a></td>
+                            <td>
+                                Add new Roles. Requires SuperAdmin role.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a  class="nav-link text-dark" asp-controller="Users"  title="Users">Users</a></td>
+                            <td>
+                                List all Users. Requires SuperAdmin Role, because this is just for Administration. Creating user most likely will be done
+                                by using Register button.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a class="nav-link text-dark" href="/Identity/Account/Manage" />Manage Account</td>
+                            <td>
+                                Manage user Account
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+            </div>
 
-    </ul>
+
+        </div>
+
+    </div>
 
 </div>

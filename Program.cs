@@ -39,9 +39,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddAuthentication()
     .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Unauthorized/";
-        options.AccessDeniedPath = "/Account/Forbidden/";
-       
+        
+        options.LoginPath = "/Identity/Account/Login";
+        options.LogoutPath = "/Identity/Account/Logout";
+        options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+
     })
     .AddJwtBearer(options => 
     {
@@ -94,11 +96,11 @@ builder.Services.AddScoped<RoleManager<IdentityRole>>();
 //builder.Services.AddScoped<ILogger>();
 //builder.Services.AddTransient<ITokenService, TokenService>();
 //builder.Services.AddTransient<ILoginService, LoginService>();
+//builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddTransient<IBookService, BookService>();
 builder.Services.AddTransient<IAuthorService, AuthorService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
-//builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddTransient<IEntityRelationShipManagerService, EntityRelationShipManagerService>();
 var app = builder.Build();
@@ -149,6 +151,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
 app.MapControllerRoute(
@@ -156,6 +161,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-app.UseAuthentication();
-app.UseAuthorization();
+
 app.Run();
