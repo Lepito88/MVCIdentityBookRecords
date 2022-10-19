@@ -503,6 +503,6 @@ namespace MVCIdentityBookRecords.Services
  * ATB09 : Book has not been added to user
  * ATB10 : Unable to find category
  * ATB11 : Category is already added to book
- * Atb12 : Category has not been added to book. Unable to remove.
+ * ATB12 : Category has not been added to book. Unable to remove.
  
  */

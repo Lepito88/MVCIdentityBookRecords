@@ -192,6 +192,6 @@ B01 : No Books found
 B02 : Book not found
 B03 : Unable to delete book
 B04 : Unable to update book
-B05 : Unadle to save book
+B05 : Unable to save book
 
  */
