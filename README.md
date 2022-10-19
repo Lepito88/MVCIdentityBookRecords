@@ -9,8 +9,15 @@ and API uses Jwt-token based authentication.
 <img src="./ER-Model.png" alt="ER-model"/>
 
 # Configuration
-One needs to create user-secrets file to add necessary config strings.
-This version Uses currently Local MySql database.
+- One needs to create user-secrets file to add necessary config strings.
+- The files contains example of the user-secrets file that is required to run this application.
+- This version Uses currently Local MySql database. <br>
+
+- Configure database and user for it
+- Install necessary Entityframework command tools
+- run update-database command in PackageManager Console.
+- When it is successfull build the app. If this fails check the connectionstring and database rights.
+
 # API Endpoints
 
 Application API Controllers uses following Base_url: https://localhost:7041/api OR http:/localhost:5041/api <br>
