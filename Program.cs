@@ -49,8 +49,8 @@ builder.Services.AddControllers();
 
 // Add services to the container.
 //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-var connectionString = builder.Configuration.GetConnectionString("MySqlConnection").ToString();
-
+//var connectionString = builder.Configuration.GetConnectionString("MySqlConnection").ToString();
+var connectionString = builder.Configuration["Connections:MysqlQnap"];
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString),
     //options.UseSqlServer(connectionString));
